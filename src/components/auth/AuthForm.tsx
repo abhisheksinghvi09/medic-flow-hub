@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -122,8 +121,17 @@ export const AuthForm = () => {
           return;
         }
         
-        toast.success("Registration successful! Please check your email to confirm your account.");
-        setFormType('login');
+        toast.success("Registration successful!");
+        const signInResult = await signIn(formData.email, formData.password);
+        
+        if (signInResult.error) {
+          toast.error("Registration successful, but automatic login failed. Please login manually.");
+          setIsLoading(false);
+          setFormType('login');
+          return;
+        }
+        
+        navigate('/dashboard');
       }
     } catch (error: any) {
       console.error(error);
