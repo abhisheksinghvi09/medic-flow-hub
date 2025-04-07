@@ -8,7 +8,7 @@ import {
   User, 
   X, 
   Stethoscope, 
-  Pills, 
+  Pill, 
   Plane, 
   LogOut 
 } from 'lucide-react';
@@ -26,7 +26,7 @@ const navItems: SidebarItem[] = [
   { name: "Profile", href: "/profile", icon: User, roles: ["patient", "doctor", "admin"] },
   { name: "Appointments", href: "/appointments", icon: Calendar, roles: ["patient", "doctor", "admin"] },
   { name: "Disease Detection", href: "/disease-detection", icon: Stethoscope, roles: ["patient", "doctor", "admin"] },
-  { name: "Pharmacy", href: "/pharmacy", icon: Pills, roles: ["patient", "doctor", "admin"] },
+  { name: "Pharmacy", href: "/pharmacy", icon: Pill, roles: ["patient", "doctor", "admin"] },
   { name: "Medical Tourism", href: "/tourism", icon: Plane, roles: ["patient", "doctor", "admin"] },
 ];
 

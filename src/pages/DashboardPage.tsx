@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -6,7 +5,7 @@ import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { RecentAppointments } from '@/components/dashboard/RecentAppointments';
 import { HealthStatus } from '@/components/dashboard/HealthStatus';
 import { Button } from '@/components/ui/button';
-import { Calendar, Stethoscope, Pills, Plane } from 'lucide-react';
+import { Calendar, Stethoscope, Pill, Plane } from 'lucide-react';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
@@ -71,7 +70,7 @@ export default function DashboardPage() {
             <ServiceCard 
               title="Order Medication" 
               description="Browse online pharmacy"
-              icon={<Pills className="h-6 w-6" />}
+              icon={<Pill className="h-6 w-6" />}
               href="/pharmacy"
               color="bg-purple-50 text-purple-700 hover:bg-purple-100"
             />
