@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { 
@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -24,7 +25,7 @@ const registerSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z.string().min(8, { message: "Password must be at least 8 characters" }),
-  role: z.enum(["patient", "doctor", "admin"], {
+  role: z.enum(["patient", "doctor"], {
     required_error: "Please select a role",
   }),
 });
@@ -35,6 +36,14 @@ export const AuthForm = () => {
   const [formType, setFormType] = useState<FormType>('login');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { signIn, signUp, user } = useAuth();
+  
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
   
   // Form data state
   const [formData, setFormData] = useState({
@@ -53,6 +62,13 @@ export const AuthForm = () => {
   // Toggle between login and register forms
   const toggleFormType = () => {
     setFormType(prev => prev === 'login' ? 'register' : 'login');
+    // Clear form data except email when switching forms
+    setFormData(prev => ({
+      ...prev,
+      name: '',
+      password: '',
+      role: 'patient',
+    }));
   };
 
   // Handle form submission
@@ -71,16 +87,16 @@ export const AuthForm = () => {
           return;
         }
         
-        // Here you would normally make an API call to authenticate
-        // For now, we'll simulate a successful login
-        localStorage.setItem('user', JSON.stringify({ 
-          email: formData.email, 
-          role: 'patient',
-          name: 'Demo Patient'
-        }));
+        const { error } = await signIn(formData.email, formData.password);
+        
+        if (error) {
+          toast.error(error.message || "Login failed. Please check your credentials.");
+          setIsLoading(false);
+          return;
+        }
         
         toast.success("Login successful!");
-        setTimeout(() => navigate('/dashboard'), 1000);
+        navigate('/dashboard');
       } else {
         const result = registerSchema.safeParse(formData);
         if (!result.success) {
@@ -91,15 +107,27 @@ export const AuthForm = () => {
           return;
         }
         
-        // Here you would normally make an API call to register the user
-        // For now, we'll simulate a successful registration
-        toast.success("Registration successful! Please login.");
+        const { error } = await signUp(
+          formData.email, 
+          formData.password, 
+          {
+            name: formData.name,
+            role: formData.role
+          }
+        );
+        
+        if (error) {
+          toast.error(error.message || "Registration failed. Please try again.");
+          setIsLoading(false);
+          return;
+        }
+        
+        toast.success("Registration successful! Please check your email to confirm your account.");
         setFormType('login');
-        setFormData(prev => ({ ...prev, password: '' }));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error("An error occurred. Please try again.");
+      toast.error(error.message || "An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }

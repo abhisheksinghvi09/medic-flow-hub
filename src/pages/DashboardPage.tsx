@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -6,37 +7,22 @@ import { RecentAppointments } from '@/components/dashboard/RecentAppointments';
 import { HealthStatus } from '@/components/dashboard/HealthStatus';
 import { Button } from '@/components/ui/button';
 import { Calendar, Stethoscope, Pill, Plane } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { profile } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if user is logged in
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      navigate('/auth/login');
-    }
-    setIsLoading(false);
-  }, [navigate]);
-
-  if (isLoading) {
+  if (!profile) {
     return <div>Loading...</div>;
   }
 
-  if (!user) {
-    return null;
-  }
-
   return (
-    <MainLayout userRole={user?.role}>
+    <MainLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Welcome, {user?.name || 'User'}
+            Welcome, {profile.name || 'User'}
           </h1>
           <p className="text-muted-foreground">
             Here's an overview of your health and upcoming medical appointments

@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Calendar, 
   Home, 
@@ -13,6 +13,8 @@ import {
   LogOut 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 type SidebarItem = {
   name: string;
@@ -37,9 +39,25 @@ interface SidebarProps {
 export default function Sidebar({ userRole = "patient" }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const { signOut, profile } = useAuth();
+  const navigate = useNavigate();
+  
+  // Use authenticated role if available
+  const role = profile?.role || userRole;
   
   // Filter menu items based on user role
-  const filteredItems = navItems.filter(item => item.roles.includes(userRole));
+  const filteredItems = navItems.filter(item => item.roles.includes(role));
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast.success("Logged out successfully");
+      navigate('/auth/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error("Failed to log out. Please try again.");
+    }
+  };
 
   return (
     <div 
@@ -83,17 +101,24 @@ export default function Sidebar({ userRole = "patient" }: SidebarProps) {
         </ul>
       </nav>
 
-      <div className="absolute bottom-4 w-full px-2">
-        <Link
-          to="/auth/login"
+      <div className="absolute bottom-20 w-full px-2">
+        {!isCollapsed && profile && (
+          <div className="px-4 py-3 mb-2">
+            <p className="text-sm text-gray-400">Signed in as:</p>
+            <p className="font-medium truncate">{profile.name || 'User'}</p>
+            <p className="text-xs text-gray-400 capitalize">{profile.role}</p>
+          </div>
+        )}
+        <button
+          onClick={handleLogout}
           className={cn(
-            "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-red-300 hover:bg-red-900/20 hover:text-red-200",
+            "flex items-center gap-3 w-full px-4 py-3 rounded-lg transition-colors text-red-300 hover:bg-red-900/20 hover:text-red-200",
             isCollapsed ? "justify-center" : ""
           )}
         >
           <LogOut className="h-5 w-5" />
           {!isCollapsed && <span>Logout</span>}
-        </Link>
+        </button>
       </div>
     </div>
   );
