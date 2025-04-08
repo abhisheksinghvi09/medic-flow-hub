@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { InputWithSuffix } from '@/components/ui/input-with-suffix';
 import { useForm } from 'react-hook-form';
 import { HeartPulse, Activity, Thermometer, Weight, TrendingUp, ClipboardList } from 'lucide-react';
 import { toast } from 'sonner';
@@ -84,7 +84,7 @@ export function HealthMetricsForm() {
                           Systolic BP
                         </FormLabel>
                         <FormControl>
-                          <Input
+                          <InputWithSuffix
                             {...field}
                             type="number"
                             placeholder="120"
@@ -101,7 +101,7 @@ export function HealthMetricsForm() {
                       <FormItem className="flex-1">
                         <FormLabel>Diastolic BP</FormLabel>
                         <FormControl>
-                          <Input
+                          <InputWithSuffix
                             {...field}
                             type="number"
                             placeholder="80"
@@ -123,7 +123,7 @@ export function HealthMetricsForm() {
                         Heart Rate
                       </FormLabel>
                       <FormControl>
-                        <Input
+                        <InputWithSuffix
                           {...field}
                           type="number"
                           placeholder="75"
@@ -144,7 +144,7 @@ export function HealthMetricsForm() {
                         Temperature
                       </FormLabel>
                       <FormControl>
-                        <Input
+                        <InputWithSuffix
                           {...field}
                           type="number"
                           placeholder="98.6"
@@ -168,7 +168,7 @@ export function HealthMetricsForm() {
                         Weight
                       </FormLabel>
                       <FormControl>
-                        <Input
+                        <InputWithSuffix
                           {...field}
                           type="number"
                           placeholder="150"
@@ -190,7 +190,7 @@ export function HealthMetricsForm() {
                         Blood Sugar
                       </FormLabel>
                       <FormControl>
-                        <Input
+                        <InputWithSuffix
                           {...field}
                           type="number"
                           placeholder="120"
@@ -211,7 +211,7 @@ export function HealthMetricsForm() {
                         Oxygen Saturation
                       </FormLabel>
                       <FormControl>
-                        <Input
+                        <InputWithSuffix
                           {...field}
                           type="number"
                           placeholder="98"
