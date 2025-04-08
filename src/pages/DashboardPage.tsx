@@ -27,15 +27,19 @@ export default function DashboardPage() {
     return <Loader />;
   }
 
+  // Define allowed components based on role
+  const DashboardComponent = {
+    admin: AdminDashboard,
+    doctor: DoctorDashboard,
+    patient: PatientDashboard
+  }[profile.role] || PatientDashboard;
+
   return (
-    <MainLayout>
-      {profile.role === 'admin' ? (
-        <AdminDashboard profile={profile} />
-      ) : profile.role === 'doctor' ? (
-        <DoctorDashboard profile={profile} />
-      ) : (
-        <PatientDashboard profile={profile} />
-      )}
+    <MainLayout 
+      allowedRoles={["patient", "doctor", "admin"]}
+      requireAuth={true}
+    >
+      <DashboardComponent profile={profile} />
     </MainLayout>
   );
 }

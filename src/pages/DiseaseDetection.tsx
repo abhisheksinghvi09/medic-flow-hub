@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -11,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Stethoscope, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { HealthVisualization3D } from '@/components/health/HealthVisualization3D';
+import { useAuth } from '@/contexts/AuthContext';
 
 const SYMPTOMS = [
   "Fever", "Cough", "Headache", "Sore Throat", "Fatigue", "Shortness of Breath", 
@@ -20,6 +22,7 @@ const SYMPTOMS = [
 
 export default function DiseaseDetection() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const [age, setAge] = useState("");
   const [gender, setGender] = useState(""); 
   const [description, setDescription] = useState("");
@@ -95,6 +98,14 @@ export default function DiseaseDetection() {
     setGender("");
     setDuration("");
     setResult(null);
+  };
+  
+  const handleBookAppointment = () => {
+    navigate('/appointments/book', { 
+      state: { 
+        reason: result ? `Possible ${result.disease}` : 'Follow-up on disease detection' 
+      } 
+    });
   };
   
   return (
@@ -273,7 +284,7 @@ export default function DiseaseDetection() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full" onClick={() => navigate('/appointments/book')}>
+                  <Button variant="outline" className="w-full" onClick={handleBookAppointment}>
                     Book an Appointment with a Doctor
                   </Button>
                 </CardFooter>

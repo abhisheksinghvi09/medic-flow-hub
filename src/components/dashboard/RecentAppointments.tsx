@@ -127,12 +127,16 @@ export const RecentAppointments = () => {
   useEffect(() => {
     // Filter appointments for the current user
     // This simulates user-specific appointments
-    const patientId = profile?.id || "patient-001"; // Default for demo if no profile
-    const userAppointments = mockAppointmentsData.filter(
-      app => app.patientId === patientId
-    );
-    
-    setAppointments(userAppointments);
+    if (profile) {
+      const patientId = profile.id || "patient-001"; // Default for demo if no profile
+      const userAppointments = mockAppointmentsData.filter(
+        app => app.patientId === patientId
+      );
+      
+      setAppointments(userAppointments);
+    } else {
+      setAppointments([]);
+    }
   }, [profile]);
 
   const upcomingAppointments = appointments.filter(
