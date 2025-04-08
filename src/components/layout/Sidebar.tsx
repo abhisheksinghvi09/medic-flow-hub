@@ -13,7 +13,11 @@ import {
   LogOut,
   FileText,
   Users,
-  Activity
+  Activity,
+  Settings,
+  Building,
+  AlertCircle,
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -41,6 +45,16 @@ const navItems: SidebarItem[] = [
   { name: "Doctor Schedule", href: "/doctor/schedule", icon: Calendar, roles: ["doctor", "admin"] },
   { name: "Write Prescriptions", href: "/doctor/prescriptions", icon: Pill, roles: ["doctor", "admin"] },
   { name: "Order Tests", href: "/doctor/lab-tests", icon: Stethoscope, roles: ["doctor", "admin"] },
+  { name: "Patient Vitals", href: "/doctor/vitals", icon: Activity, roles: ["doctor", "admin"] },
+  { name: "Department", href: "/doctor/department", icon: Building, roles: ["doctor", "admin"] },
+
+  // Admin specific routes
+  { name: "User Management", href: "/admin/users", icon: Users, roles: ["admin"] },
+  { name: "Departments", href: "/admin/departments", icon: Building, roles: ["admin"] },
+  { name: "Doctor Verification", href: "/admin/verification", icon: ShieldCheck, roles: ["admin"] },
+  { name: "System Settings", href: "/admin/settings", icon: Settings, roles: ["admin"] },
+  { name: "System Logs", href: "/admin/logs", icon: FileText, roles: ["admin"] },
+  { name: "Emergency Service", href: "/admin/emergency", icon: AlertCircle, roles: ["admin"] },
 ];
 
 interface SidebarProps {
@@ -91,7 +105,7 @@ export default function Sidebar({ userRole = "patient" }: SidebarProps) {
         </button>
       </div>
       
-      <nav className="px-2 py-4">
+      <nav className="px-2 py-4 overflow-y-auto max-h-[calc(100vh-180px)]">
         <ul className="space-y-2">
           {filteredItems.map((item) => (
             <li key={item.name}>

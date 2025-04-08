@@ -1,12 +1,13 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Calendar, Stethoscope, Pill, Plane, FileText } from 'lucide-react';
+import { Calendar, Stethoscope, Pill, Plane, FileText, Activity, AlertCircle } from 'lucide-react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { RecentAppointments } from '@/components/dashboard/RecentAppointments';
 import { HealthStatus } from '@/components/dashboard/HealthStatus';
 import { Profile } from '@/types/database.types';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface PatientDashboardProps {
   profile: Profile;
@@ -15,15 +16,35 @@ interface PatientDashboardProps {
 export const PatientDashboard = ({ profile }: PatientDashboardProps) => {
   const navigate = useNavigate();
   
+  const handleAppointmentBook = () => {
+    navigate('/appointments/book');
+  };
+
+  const handleEmergencyAlert = () => {
+    toast.error("Emergency assistance requested! A healthcare provider will contact you shortly.", {
+      duration: 5000,
+    });
+  };
+  
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Welcome, {profile.name || 'Patient'}
-        </h1>
-        <p className="text-muted-foreground">
-          Here's an overview of your health and upcoming medical appointments
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Welcome, {profile.name || 'Patient'}
+          </h1>
+          <p className="text-muted-foreground">
+            Here's an overview of your health and upcoming medical appointments
+          </p>
+        </div>
+        <Button 
+          variant="destructive" 
+          className="flex items-center gap-2"
+          onClick={handleEmergencyAlert}
+        >
+          <AlertCircle className="h-4 w-4" />
+          Emergency Alert
+        </Button>
       </div>
       
       <DashboardStats />
@@ -31,6 +52,47 @@ export const PatientDashboard = ({ profile }: PatientDashboardProps) => {
       <div className="grid gap-6 md:grid-cols-2">
         <RecentAppointments />
         <HealthStatus />
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="bg-medical-primary/10 rounded-xl p-6 md:col-span-2">
+          <h3 className="text-xl font-semibold mb-4">Quick Actions</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <Button onClick={handleAppointmentBook} variant="default" className="h-auto py-4 flex flex-col items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              <span>Book Appointment</span>
+            </Button>
+            <Button onClick={() => navigate('/health-metrics/add')} variant="outline" className="bg-white h-auto py-4 flex flex-col items-center gap-2">
+              <Activity className="h-5 w-5" />
+              <span>Add Health Metrics</span>
+            </Button>
+            <Button onClick={() => navigate('/medical-records')} variant="outline" className="bg-white h-auto py-4 flex flex-col items-center gap-2">
+              <FileText className="h-5 w-5" />
+              <span>View Medical Records</span>
+            </Button>
+            <Button onClick={() => navigate('/disease-detection')} variant="outline" className="bg-white h-auto py-4 flex flex-col items-center gap-2">
+              <Stethoscope className="h-5 w-5" />
+              <span>Disease Detection</span>
+            </Button>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6">
+          <h3 className="text-xl font-semibold mb-4">Health Tips</h3>
+          <div className="space-y-4">
+            <div className="bg-white rounded-lg p-4 shadow-sm">
+              <h4 className="font-medium">Stay Hydrated</h4>
+              <p className="text-sm text-gray-600">Remember to drink at least 8 glasses of water daily.</p>
+            </div>
+            <div className="bg-white rounded-lg p-4 shadow-sm">
+              <h4 className="font-medium">Regular Exercise</h4>
+              <p className="text-sm text-gray-600">Aim for 30 minutes of moderate activity each day.</p>
+            </div>
+          </div>
+          <Button variant="link" className="mt-4 p-0" onClick={() => navigate('/health-tips')}>
+            View all health tips
+          </Button>
+        </div>
       </div>
 
       <div>
@@ -67,7 +129,7 @@ export const PatientDashboard = ({ profile }: PatientDashboardProps) => {
           <ServiceCard 
             title="Health Metrics" 
             description="Track your health data"
-            icon={<Stethoscope className="h-6 w-6" />}
+            icon={<Activity className="h-6 w-6" />}
             href="/health-metrics"
             color="bg-teal-50 text-teal-700 hover:bg-teal-100"
           />

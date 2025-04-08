@@ -12,6 +12,11 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<{ error: any | null }>;
   signUp: (email: string, password: string, userData: Record<string, any>) => Promise<{ error: any | null }>;
   signOut: () => Promise<void>;
+  hasPermission: (action: string, resource: string) => boolean;
+  isAdmin: () => boolean;
+  isDoctor: () => boolean;
+  isPatient: () => boolean;
+  updateProfile: (data: Partial<Profile>) => Promise<{ error: any | null }>;
 };
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -106,6 +111,60 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
   };
 
+  const updateProfile = async (data: Partial<Profile>) => {
+    if (!user?.id) {
+      return { error: new Error('User not authenticated') };
+    }
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ ...data, updated_at: new Date().toISOString() })
+        .eq('id', user.id);
+
+      if (!error) {
+        // Update local profile state
+        setProfile(prev => prev ? { ...prev, ...data } : null);
+      }
+
+      return { error };
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      return { error };
+    }
+  };
+
+  // Role-based access control helpers
+  const isAdmin = () => profile?.role === 'admin';
+  const isDoctor = () => profile?.role === 'doctor';
+  const isPatient = () => profile?.role === 'patient';
+
+  // Permission system based on role and resource
+  const hasPermission = (action: string, resource: string): boolean => {
+    if (!profile) return false;
+    
+    // Define permissions based on role
+    const permissions: Record<string, Record<string, string[]>> = {
+      admin: {
+        read: ['users', 'appointments', 'medical_records', 'prescriptions', 'health_metrics', 'departments'],
+        write: ['users', 'appointments', 'medical_records', 'prescriptions', 'health_metrics', 'departments'],
+        delete: ['users', 'appointments', 'medical_records', 'prescriptions', 'health_metrics'],
+      },
+      doctor: {
+        read: ['appointments', 'patients', 'medical_records', 'prescriptions', 'health_metrics', 'departments'],
+        write: ['appointments', 'medical_records', 'prescriptions', 'health_metrics'],
+        delete: ['appointments'],
+      },
+      patient: {
+        read: ['appointments', 'medical_records', 'prescriptions', 'health_metrics'],
+        write: ['appointments', 'health_metrics'],
+        delete: ['appointments'],
+      }
+    };
+
+    return permissions[profile.role]?.[action]?.includes(resource) || false;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -116,6 +175,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signIn,
         signUp,
         signOut,
+        hasPermission,
+        isAdmin,
+        isDoctor,
+        isPatient,
+        updateProfile,
       }}
     >
       {children}
