@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ const SYMPTOMS = [
 ];
 
 export default function DiseaseDetection() {
+  const navigate = useNavigate();
   const [age, setAge] = useState("");
   const [gender, setGender] = useState(""); 
   const [description, setDescription] = useState("");
