@@ -14,6 +14,7 @@ import TourismPage from "./pages/TourismPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import HealthMetricsPage from "./pages/HealthMetricsPage";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Navigate to="/auth/login" replace />} />
             <Route path="/auth/login" element={<AuthPage />} />
+            
+            {/* Patient & Common Routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <DashboardPage />
@@ -37,9 +40,19 @@ const App = () => (
                 <AppointmentsPage />
               </ProtectedRoute>
             } />
+            <Route path="/appointments/book" element={
+              <ProtectedRoute>
+                <AppointmentsPage />
+              </ProtectedRoute>
+            } />
             <Route path="/disease-detection" element={
               <ProtectedRoute>
                 <DiseaseDetection />
+              </ProtectedRoute>
+            } />
+            <Route path="/health-metrics" element={
+              <ProtectedRoute>
+                <HealthMetricsPage />
               </ProtectedRoute>
             } />
             <Route path="/pharmacy" element={
@@ -57,6 +70,34 @@ const App = () => (
                 <ProfilePage />
               </ProtectedRoute>
             } />
+            
+            {/* Doctor Routes */}
+            <Route path="/doctor/patients" element={
+              <ProtectedRoute>
+                <div>Doctor Patients Page</div>
+              </ProtectedRoute>
+            } />
+            <Route path="/doctor/schedule" element={
+              <ProtectedRoute>
+                <div>Doctor Schedule Page</div>
+              </ProtectedRoute>
+            } />
+            <Route path="/doctor/prescriptions" element={
+              <ProtectedRoute>
+                <div>Write Prescriptions Page</div>
+              </ProtectedRoute>
+            } />
+            <Route path="/doctor/lab-tests" element={
+              <ProtectedRoute>
+                <div>Order Lab Tests Page</div>
+              </ProtectedRoute>
+            } />
+            <Route path="/medical-records" element={
+              <ProtectedRoute>
+                <div>Medical Records Page</div>
+              </ProtectedRoute>
+            } />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -10,7 +10,10 @@ import {
   Stethoscope, 
   Pill, 
   Plane, 
-  LogOut 
+  LogOut,
+  FileText,
+  Users,
+  Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -27,9 +30,17 @@ const navItems: SidebarItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: Home, roles: ["patient", "doctor", "admin"] },
   { name: "Profile", href: "/profile", icon: User, roles: ["patient", "doctor", "admin"] },
   { name: "Appointments", href: "/appointments", icon: Calendar, roles: ["patient", "doctor", "admin"] },
-  { name: "Disease Detection", href: "/disease-detection", icon: Stethoscope, roles: ["patient", "doctor", "admin"] },
-  { name: "Pharmacy", href: "/pharmacy", icon: Pill, roles: ["patient", "doctor", "admin"] },
-  { name: "Medical Tourism", href: "/tourism", icon: Plane, roles: ["patient", "doctor", "admin"] },
+  { name: "Medical Records", href: "/medical-records", icon: FileText, roles: ["patient", "admin"] },
+  { name: "Health Metrics", href: "/health-metrics", icon: Activity, roles: ["patient", "admin"] },
+  { name: "Disease Detection", href: "/disease-detection", icon: Stethoscope, roles: ["patient", "admin"] },
+  { name: "Pharmacy", href: "/pharmacy", icon: Pill, roles: ["patient", "admin"] },
+  { name: "Medical Tourism", href: "/tourism", icon: Plane, roles: ["patient", "admin"] },
+  
+  // Doctor specific routes
+  { name: "My Patients", href: "/doctor/patients", icon: Users, roles: ["doctor", "admin"] },
+  { name: "Doctor Schedule", href: "/doctor/schedule", icon: Calendar, roles: ["doctor", "admin"] },
+  { name: "Write Prescriptions", href: "/doctor/prescriptions", icon: Pill, roles: ["doctor", "admin"] },
+  { name: "Order Tests", href: "/doctor/lab-tests", icon: Stethoscope, roles: ["doctor", "admin"] },
 ];
 
 interface SidebarProps {
