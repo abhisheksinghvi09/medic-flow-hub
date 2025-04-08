@@ -1,4 +1,5 @@
 
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin, User } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface AppointmentData {
   id: string;
@@ -17,9 +19,11 @@ interface AppointmentData {
   time: string;
   location: string;
   status: "upcoming" | "completed" | "canceled";
+  patientId: string;
 }
 
-const mockAppointments: AppointmentData[] = [
+// Mock appointments data - in a real app, this would come from the backend
+const mockAppointmentsData: AppointmentData[] = [
   {
     id: "app1",
     doctorName: "Dr. Sarah Johnson",
@@ -28,6 +32,7 @@ const mockAppointments: AppointmentData[] = [
     time: "10:00 AM",
     location: "Main Hospital, Floor 3",
     status: "upcoming",
+    patientId: "patient-001"
   },
   {
     id: "app2",
@@ -37,6 +42,7 @@ const mockAppointments: AppointmentData[] = [
     time: "2:30 PM",
     location: "West Wing, Office 205",
     status: "upcoming",
+    patientId: "patient-001"
   },
   {
     id: "app3",
@@ -46,6 +52,17 @@ const mockAppointments: AppointmentData[] = [
     time: "9:15 AM",
     location: "Main Hospital, Floor 1",
     status: "completed",
+    patientId: "patient-001"
+  },
+  {
+    id: "app4",
+    doctorName: "Dr. James Wilson",
+    speciality: "Neurologist",
+    date: "Apr 20, 2025",
+    time: "11:30 AM",
+    location: "Medical Center, Room 302",
+    status: "upcoming",
+    patientId: "patient-002"
   },
 ];
 
@@ -103,7 +120,22 @@ const AppointmentCard = ({ appointment }: { appointment: AppointmentData }) => {
 };
 
 export const RecentAppointments = () => {
-  const upcomingAppointments = mockAppointments.filter(
+  const { profile } = useAuth();
+  const [appointments, setAppointments] = useState<AppointmentData[]>([]);
+
+  // In a real app, this would fetch data from an API
+  useEffect(() => {
+    // Filter appointments for the current user
+    // This simulates user-specific appointments
+    const patientId = profile?.id || "patient-001"; // Default for demo if no profile
+    const userAppointments = mockAppointmentsData.filter(
+      app => app.patientId === patientId
+    );
+    
+    setAppointments(userAppointments);
+  }, [profile]);
+
+  const upcomingAppointments = appointments.filter(
     (app) => app.status === "upcoming"
   );
 

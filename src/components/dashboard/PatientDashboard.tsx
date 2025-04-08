@@ -1,13 +1,14 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Calendar, Stethoscope, Pill, Plane, FileText, Activity, AlertCircle } from 'lucide-react';
+import { Calendar, Stethoscope, Pill, Plane, FileText, Activity, AlertCircle, HeartPulse } from 'lucide-react';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { RecentAppointments } from '@/components/dashboard/RecentAppointments';
 import { HealthStatus } from '@/components/dashboard/HealthStatus';
 import { Profile } from '@/types/database.types';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Card } from '@/components/ui/card';
 
 interface PatientDashboardProps {
   profile: Profile;
@@ -55,29 +56,29 @@ export const PatientDashboard = ({ profile }: PatientDashboardProps) => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <div className="bg-medical-primary/10 rounded-xl p-6 md:col-span-2">
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 md:col-span-2">
           <h3 className="text-xl font-semibold mb-4">Quick Actions</h3>
           <div className="grid grid-cols-2 gap-4">
-            <Button onClick={handleAppointmentBook} variant="default" className="h-auto py-4 flex flex-col items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              <span>Book Appointment</span>
+            <Button onClick={() => navigate('/disease-detection')} variant="default" className="h-auto py-4 flex flex-col items-center gap-2 bg-medical-primary hover:bg-medical-primary/90">
+              <Stethoscope className="h-5 w-5" />
+              <span>Disease Detection</span>
             </Button>
             <Button onClick={() => navigate('/health-metrics/add')} variant="outline" className="bg-white h-auto py-4 flex flex-col items-center gap-2">
-              <Activity className="h-5 w-5" />
+              <HeartPulse className="h-5 w-5" />
               <span>Add Health Metrics</span>
             </Button>
             <Button onClick={() => navigate('/medical-records')} variant="outline" className="bg-white h-auto py-4 flex flex-col items-center gap-2">
               <FileText className="h-5 w-5" />
               <span>View Medical Records</span>
             </Button>
-            <Button onClick={() => navigate('/disease-detection')} variant="outline" className="bg-white h-auto py-4 flex flex-col items-center gap-2">
-              <Stethoscope className="h-5 w-5" />
-              <span>Disease Detection</span>
+            <Button onClick={handleAppointmentBook} variant="outline" className="bg-white h-auto py-4 flex flex-col items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              <span>Book Appointment</span>
             </Button>
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6">
+        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-0">
           <h3 className="text-xl font-semibold mb-4">Health Tips</h3>
           <div className="space-y-4">
             <div className="bg-white rounded-lg p-4 shadow-sm">
@@ -92,25 +93,25 @@ export const PatientDashboard = ({ profile }: PatientDashboardProps) => {
           <Button variant="link" className="mt-4 p-0" onClick={() => navigate('/health-tips')}>
             View all health tips
           </Button>
-        </div>
+        </Card>
       </div>
 
       <div>
         <h2 className="text-2xl font-semibold mb-4">Patient Services</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <ServiceCard 
-            title="Book Appointment" 
-            description="Schedule a doctor visit"
-            icon={<Calendar className="h-6 w-6" />}
-            href="/appointments/book"
-            color="bg-blue-50 text-blue-700 hover:bg-blue-100"
-          />
-          <ServiceCard 
-            title="Disease Check" 
+            title="Disease Detection" 
             description="AI-based symptom analysis"
             icon={<Stethoscope className="h-6 w-6" />}
             href="/disease-detection"
             color="bg-green-50 text-green-700 hover:bg-green-100"
+          />
+          <ServiceCard 
+            title="Health Metrics" 
+            description="Track your health data"
+            icon={<HeartPulse className="h-6 w-6" />}
+            href="/health-metrics"
+            color="bg-teal-50 text-teal-700 hover:bg-teal-100"
           />
           <ServiceCard 
             title="Medical Records" 
@@ -120,18 +121,18 @@ export const PatientDashboard = ({ profile }: PatientDashboardProps) => {
             color="bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
           />
           <ServiceCard 
+            title="Book Appointment" 
+            description="Schedule a doctor visit"
+            icon={<Calendar className="h-6 w-6" />}
+            href="/appointments/book"
+            color="bg-blue-50 text-blue-700 hover:bg-blue-100"
+          />
+          <ServiceCard 
             title="Order Medication" 
             description="Browse online pharmacy"
             icon={<Pill className="h-6 w-6" />}
             href="/pharmacy"
             color="bg-purple-50 text-purple-700 hover:bg-purple-100"
-          />
-          <ServiceCard 
-            title="Health Metrics" 
-            description="Track your health data"
-            icon={<Activity className="h-6 w-6" />}
-            href="/health-metrics"
-            color="bg-teal-50 text-teal-700 hover:bg-teal-100"
           />
           <ServiceCard 
             title="Medical Tourism" 
